@@ -29,11 +29,12 @@ object RoomActor {
 }
 
 class RoomActor(out: ActorRef) extends Actor {
-
+  val pattern =  """(?s)(\w+),([^,]*),(.*)""".r
   def receive = {
     case "marco" => out ! ("polo")
-    case msg: String =>
-      out ! ("I received your message: " + msg)
+    case pattern ("roomHello", id, payload) => out ! ("Hi Mediator")
+    case pattern ("roomGoodbye", id, payload) => out ! ("Bye Mediator")
+    case _ => out ! ("whatever, I dont care...")
   }
 
   override def preStart = out ! ("""ack,{
