@@ -1,6 +1,8 @@
 name := """sample scala room"""
 organization := "com.ilanpillemer"
 
+scalacOptions ++= Seq("-deprecation", "-feature")
+
 version := "1.0-SNAPSHOT"
 
 lazy val root = (project in file(".")).enablePlugins(PlayScala)
