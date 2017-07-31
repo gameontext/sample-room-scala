@@ -46,6 +46,12 @@ object RoomActor {
     "roomInventory" -> List("yoyo","top")
   )
 
+  def chat(message : String, username : String) : JsValue = Json.obj (
+    "type" -> "chat",
+    "username" -> username,
+    "content" -> message,
+    "bookmark" -> "GIRAFFE!"
+  )
 }
 
 class RoomActor(out: ActorRef) extends Actor {
@@ -53,12 +59,19 @@ class RoomActor(out: ActorRef) extends Actor {
   def receive =  {
     case str : String => str match {
       case "marco" => out ! ("polo")
-      case pattern ("roomHello", id, payload) => out ! ("player," + (Json.parse(payload) \ "userId").as[String] + "," + RoomActor.sampleRoom.toString)
-      case pattern ("roomJoin", id, payload) => out !  ("player," + (Json.parse(payload) \ "userId").as[String] + "," + RoomActor.sampleRoom.toString)
-      case pattern ("roomGoodbye", id, payload) => out ! ("Don't slam door on way out, please.")
-      case pattern ("roomPart", id, payload) => out ! ("Don't slam door on way out, please.")
-      case pattern ("room", id, payload) => out ! ("Your wish is my command.")
-      case _ => out ! ("whatever, I dont care...")
+      case pattern ("roomHello", id, payload) =>
+        out ! ("player," + (Json.parse(payload) \ "userId").as[String] + "," + RoomActor.sampleRoom.toString)
+      case pattern ("roomJoin", id, payload) =>
+        out !  ("player," + (Json.parse(payload) \ "userId").as[String] + "," + RoomActor.sampleRoom.toString)
+      case pattern ("roomGoodbye", id, payload) =>
+        out ! ("Don't slam door on way out, please.")
+      case pattern ("roomPart", id, payload)
+          => out ! ("Don't slam door on way out, please.")
+      case pattern ("room", id, payload) if ((Json.parse(payload) \ "content").as[String]).startsWith("/")  =>
+        out ! ("Your wish is my command.")
+      case pattern ("room", id, payload)   =>
+        out ! ("player,*," + RoomActor.chat( (Json.parse(payload) \ "content").as[String],  (Json.parse(payload) \ "username").as[String]))
+      case _ => out ! ("whatever, I dont care...") 
     }
     case _ => out ! ("So long, and thanks for the fish.")
   }
