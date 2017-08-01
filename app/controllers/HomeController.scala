@@ -52,6 +52,49 @@ object RoomActor {
     "content" -> message,
     "bookmark" -> "GIRAFFE!"
   )
+
+  def getUserName (payload :String) = {
+    (Json.parse(payload) \ "username")
+  }
+
+   def getUserId (payload :String) = {
+    (Json.parse(payload) \ "userId")
+  }
+
+  def command (payload: String, command : String) : String = command match {
+    case x if (x.startsWith("/go ")) => "playLocation," + getUserId(payload).as[String] + "," +  move(command.substring(4)).toString
+    case x if (x.startsWith("/play ")) => "player,*," + play(getUserName(payload).as[String],getUserId(payload).as[String])
+    case _ => "player,*," + unimplemented(getUserName(payload).as[String],getUserId(payload).as[String])
+  }
+
+  def play(username : String, userid : String) : JsValue = Json.obj (
+    "type" -> "event",
+    "content" -> Json.obj (
+      "*" -> (username + " plays"),
+      userid -> "you play"
+    ),
+    "bookmark" -> "ELEPHANT!"
+  )
+
+   def unimplemented(username : String, userid : String) : JsValue = Json.obj (
+    "type" -> "event",
+    "content" -> Json.obj (
+      "*" -> (username + " attempts an unimplemented command"),
+      userid -> "you attempt an unimplemented command"
+    ),
+    "bookmark" -> "PENGUIN!"
+
+
+  )
+
+  def move(direction : String) : JsValue = direction.substring(0, 1) match {
+    case "N" | "S" | "W" | "E" => Json.obj (
+      "type" -> "exit",
+      "content" -> "You exit through the door",
+      "exitId" -> direction.substring(0, 1).toUpperCase
+    )
+    case _ => Json.obj() // Do something more intelligent here.
+  }
 }
 
 class RoomActor(out: ActorRef) extends Actor {
@@ -67,10 +110,10 @@ class RoomActor(out: ActorRef) extends Actor {
         out ! ("Don't slam door on way out, please.")
       case pattern ("roomPart", id, payload)
           => out ! ("Don't slam door on way out, please.")
-      case pattern ("room", id, payload) if ((Json.parse(payload) \ "content").as[String]).startsWith("/")  =>
-        out ! ("Your wish is my command.")
-      case pattern ("room", id, payload)   =>
-        out ! ("player,*," + RoomActor.chat( (Json.parse(payload) \ "content").as[String],  (Json.parse(payload) \ "username").as[String]))
+      case pattern ("room", id, payload) if ((Json.parse(payload) \ "content").as[String]).startsWith("/")
+          => out ! (RoomActor.command( payload, (Json.parse(payload) \ "content").as[String]) )
+      case pattern ("room", id, payload)
+          => out ! ("player,*," + RoomActor.chat( (Json.parse(payload) \ "content").as[String],  (Json.parse(payload) \ "username").as[String]))
       case _ => out ! ("whatever, I dont care...") 
     }
     case _ => out ! ("So long, and thanks for the fish.")
