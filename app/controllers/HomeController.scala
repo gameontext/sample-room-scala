@@ -18,7 +18,7 @@ class HomeController @Inject()(cc: ControllerComponents)
     Ok(views.html.index())
   }
 
-  def ws: WebSocket = WebSocket.accept[String, String] { request =>
+  def room: WebSocket = WebSocket.accept[String, String] { request =>
     ActorFlow.actorRef { out =>
       RoomActor.props(out)
     }
@@ -71,7 +71,7 @@ object RoomActor {
 
   def isDirection (payload : String) = contentOf(payload) match {
     case x if x.length >= 5 => { 
-      contentOf(payload).substring(4,5) match {
+      contentOf(payload).substring(4,5).toUpperCase match {
         case "N" | "S" | "W" | "E" => true
         case _                     => false
       }
@@ -101,8 +101,6 @@ object RoomActor {
       userid -> "you attempt an unimplemented command"
     ),
     "bookmark" -> "!*?#"
-
-
   )
 
   def move(direction : String) : JsValue = direction.substring(0, 1).toUpperCase match {
