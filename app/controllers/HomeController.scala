@@ -50,21 +50,39 @@ object RoomActor {
     "type" -> "chat",
     "username" -> username,
     "content" -> message,
-    "bookmark" -> "GIRAFFE!"
+    "bookmark" -> "!*?#!"
   )
 
-  def getUserName (payload :String) = {
-    (Json.parse(payload) \ "username")
+  def usernameOf (payload :String) = {
+    (Json.parse(payload) \ "username").as[String]
   }
 
-   def getUserId (payload :String) = {
-    (Json.parse(payload) \ "userId")
+  def contentOf (payload :String) = {
+    (Json.parse(payload) \ "content").as[String]
   }
 
-  def command (payload: String, command : String) : String = command match {
-    case x if (x.startsWith("/go ")) => "playLocation," + getUserId(payload).as[String] + "," +  move(command.substring(4)).toString
-    case x if (x.startsWith("/play ")) => "player,*," + play(getUserName(payload).as[String],getUserId(payload).as[String])
-    case _ => "player,*," + unimplemented(getUserName(payload).as[String],getUserId(payload).as[String])
+   def userIdOf (payload :String) = {
+    (Json.parse(payload) \ "userId").as[String]
+   }
+
+  def !? ( payload : String, command : String = "" ) : Boolean = {
+    contentOf(payload).startsWith("/" + command)
+  }
+
+  def isDirection (payload : String) = contentOf(payload) match {
+    case x if x.length >= 5 => { 
+      contentOf(payload).substring(4,5) match {
+        case "N" | "S" | "W" | "E" => true
+        case _                     => false
+      }
+    }
+    case _                   => false
+  }
+
+  def command (payload: String) : String = payload match {
+    case x if !? (x, "go") && isDirection(x)  => "playLocation," + userIdOf(payload) + "," +  move(contentOf(x).substring(4))
+    case x if !? (x, "play") => "player,*," + play(usernameOf(payload), userIdOf(payload))
+    case _                   => "player,*," + unimplemented(usernameOf(payload), userIdOf(payload))
   }
 
   def play(username : String, userid : String) : JsValue = Json.obj (
@@ -73,7 +91,7 @@ object RoomActor {
       "*" -> (username + " plays"),
       userid -> "you play"
     ),
-    "bookmark" -> "ELEPHANT!"
+    "bookmark" -> "!*?#!"
   )
 
    def unimplemented(username : String, userid : String) : JsValue = Json.obj (
@@ -82,41 +100,36 @@ object RoomActor {
       "*" -> (username + " attempts an unimplemented command"),
       userid -> "you attempt an unimplemented command"
     ),
-    "bookmark" -> "PENGUIN!"
+    "bookmark" -> "!*?#"
 
 
   )
 
-  def move(direction : String) : JsValue = direction.substring(0, 1) match {
+  def move(direction : String) : JsValue = direction.substring(0, 1).toUpperCase match {
     case "N" | "S" | "W" | "E" => Json.obj (
       "type" -> "exit",
       "content" -> "You exit through the door",
       "exitId" -> direction.substring(0, 1).toUpperCase
     )
-    case _ => Json.obj() // Do something more intelligent here.
+    case _ => ???
   }
 }
 
 class RoomActor(out: ActorRef) extends Actor {
-  val pattern =  """(?s)(\w+),([^,]*),(.*)""".r
+  import RoomActor._
+  val p =  """(?s)(\w+),([^,]*),(.*)""".r
   def receive =  {
     case str : String => str match {
-      case "marco" => out ! ("polo")
-      case pattern ("roomHello", id, payload) =>
-        out ! ("player," + (Json.parse(payload) \ "userId").as[String] + "," + RoomActor.sampleRoom.toString)
-      case pattern ("roomJoin", id, payload) =>
-        out !  ("player," + (Json.parse(payload) \ "userId").as[String] + "," + RoomActor.sampleRoom.toString)
-      case pattern ("roomGoodbye", id, payload) =>
-        out ! ("Don't slam door on way out, please.")
-      case pattern ("roomPart", id, payload)
-          => out ! ("Don't slam door on way out, please.")
-      case pattern ("room", id, payload) if ((Json.parse(payload) \ "content").as[String]).startsWith("/")
-          => out ! (RoomActor.command( payload, (Json.parse(payload) \ "content").as[String]) )
-      case pattern ("room", id, payload)
-          => out ! ("player,*," + RoomActor.chat( (Json.parse(payload) \ "content").as[String],  (Json.parse(payload) \ "username").as[String]))
-      case _ => out ! ("whatever, I dont care...") 
+      case "willy"                   => out ! ("")
+      case p ("roomHello", id, x)    => out ! ("player," + userIdOf(x)  + "," + sampleRoom)
+      case p ("roomJoin", id, x)     => out ! ("player," + userIdOf(x) + "," + sampleRoom)
+      case p ("roomGoodbye", _, _)   => out ! ("Don't slam door on way out, please.")
+      case p ("roomPart", _, _)      => out ! ("Don't slam door on way out, please.")
+      case p ("room", _, x) if !?(x) => out ! (command(x))
+      case p ("room", _, x)          => out ! ("player,*," + chat( contentOf(x),  usernameOf(x)))
+      case _                         => out ! ("whatever, I dont care...") 
     }
-    case _ => out ! ("So long, and thanks for the fish.")
+    case _            => out ! ("So long, and thanks for the fish.")
   }
 
   override def preStart = out ! ("""ack,{
