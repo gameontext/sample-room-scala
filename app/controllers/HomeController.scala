@@ -50,7 +50,7 @@ object RoomActor {
     "type" -> "chat",
     "username" -> username,
     "content" -> message,
-    "bookmark" -> "!*?#!"
+    "bookmark" -> "!*?#"
   )
 
   def usernameOf (payload :String) = {
@@ -91,7 +91,7 @@ object RoomActor {
       "*" -> (username + " plays"),
       userid -> "you play"
     ),
-    "bookmark" -> "!*?#!"
+    "bookmark" -> "!*?#"
   )
 
    def unimplemented(username : String, userid : String) : JsValue = Json.obj (
@@ -120,9 +120,9 @@ class RoomActor(out: ActorRef) extends Actor {
   val p =  """(?s)(\w+),([^,]*),(.*)""".r
   def receive =  {
     case str : String => str match {
-      case "willy"                   => out ! ("")
-      case p ("roomHello", id, x)    => out ! ("player," + userIdOf(x)  + "," + sampleRoom)
-      case p ("roomJoin", id, x)     => out ! ("player," + userIdOf(x) + "," + sampleRoom)
+      case "willy"                   => out ! ("nilly")
+      case p ("roomHello", _, x)     => out ! ("player," + userIdOf(x)  + "," + sampleRoom)
+      case p ("roomJoin", _, x)      => out ! ("player," + userIdOf(x) + "," + sampleRoom)
       case p ("roomGoodbye", _, _)   => out ! ("Don't slam door on way out, please.")
       case p ("roomPart", _, _)      => out ! ("Don't slam door on way out, please.")
       case p ("room", _, x) if !?(x) => out ! (command(x))
