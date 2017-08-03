@@ -3,6 +3,7 @@ var output;
 
 function init() {
     output = document.getElementById("output");
+    input = document.getElementById("input");
     testWebSocket();
 }
 
@@ -12,16 +13,16 @@ function roomHello() {
         "userId": "sally876",
         "version": 2
     };
-    doSend("roomHello,_," + JSON.stringify(roomHello));
+    writeToInput("roomHello,_," + JSON.stringify(roomHello));
 }
 
 function roomGoodbye() {
-  var roomGoodbye = {
-    "username": "Harry",
-    "userId": "harry912"
-  };
+    var roomGoodbye = {
+	"username": "Harry",
+	"userId": "harry912"
+    };
 
-  doSend("roomGoodbye,_," + JSON.stringify(roomGoodbye));
+    writeToInput("roomGoodbye,_," + JSON.stringify(roomGoodbye));
 }
 
 function chat() {
@@ -30,7 +31,7 @@ function chat() {
         "userId": "scarlet973",
         "content": "Fancy running into you in a room like this..."
     };
-    doSend("room,_," + JSON.stringify(chat));
+    writeToInput("room,_," + JSON.stringify(chat));
 }
 
 function play() {
@@ -39,7 +40,7 @@ function play() {
         "userId": "highlander54",
         "content": "/play with the other one."
     };
-    doSend("room,_," + JSON.stringify(play));
+    writeToInput("room,_," + JSON.stringify(play));
 }
 
 function argh() {
@@ -48,7 +49,7 @@ function argh() {
         "userId": "mick42",
         "content": "/asdsdfsadfa"
     };
-    doSend("room,_," + JSON.stringify(asdfs));
+    writeToInput("room,_," + JSON.stringify(asdfs));
 }
 
 function gowest() {
@@ -57,7 +58,7 @@ function gowest() {
         "userId": "scarlet973",
         "content": "/go west"
     };
-    doSend("room,_," + JSON.stringify(west));
+    writeToInput("room,_," + JSON.stringify(west));
 }
 
 
@@ -69,8 +70,16 @@ function testWebSocket() {
     websocket.onerror   = function(evt) { onError(evt) };
 }
 
+function send() {
+    doSend(input.value)
+}
+
 function clearScreen() {
     output.innerHTML=""
+}
+
+function writeToInput(message) {
+    input.value=message;
 }
 
 function writeToScreen(message) {
@@ -82,7 +91,6 @@ function writeToScreen(message) {
 
 function onOpen(evt) {
     writeToScreen("CONNECTED");
-    roomHello()
 }
 
 function onClose(evt) {

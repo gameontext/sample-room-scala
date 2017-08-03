@@ -2,25 +2,43 @@
 
 @main("sample scala room") {
 <div class="jumbotron">
-  <h1>Welcome to your sample scala room running on play!</h1>
+  <h1>Sample scala room is running!</h1>
   <p>This is a template for a starter scala/play based room in game-on. Use it as a starting point to create something more unique by building on or modifying it.</p>
 </div>
-
+<div class="page-header">
+  <h4>Preformed Messages, try them, edit them, or just write your own</h2>
+</div>
 <p>
-  <button type="button" onclick="roomHello()" class="btn btn-default">Hello</button>
+  <button type="button" onclick="roomHello()" class="btn btn-primary">Hello</button>
   <button type="button" onclick="argh()" class="btn btn-primary">Do Undefined</button>
-  <button type="button" onclick="roomGoodbye()" class="btn btn-success">Goodbye</button>
-  <button type="button" onclick="chat()" class="btn btn-info">Chat</button>
-  <button type="button" onclick="play()" class="btn btn-warning">Play</button>
-  <button type="button" onclick="gowest()" class="btn btn-danger">Go west</button>
+  <button type="button" onclick="roomGoodbye()" class="btn btn-primary">Goodbye</button>
+  <button type="button" onclick="chat()" class="btn btn-primary">Chat</button>
+  <button type="button" onclick="play()" class="btn btn-primary">Play</button>
+  <button type="button" onclick="gowest()" class="btn btn-primary">Go west</button>
 </p>
 <p>
-  <button type="button" onclick="clearScreen()" class="btn btn-default">Clear Output</button>
+
 </p>
-<div class="panel panel-info">
-  <div class="panel-heading">
-    <h3 class="panel-title">Web Socket Latest Response</h3>
+
+<div class="row">
+  <div class="col-sm-3 well">
+    <p><button type="button" onclick="send()" class="btn btn-info">Send to Room!</button></p>
+    <div class="panel panel-info">
+      <div class="panel-heading">
+	<h3 class="panel-title">Test message for the Room</h3>
+      </div>
+      <div> <textarea id="input" class="form-control" id="text" name="text" placeholder="Type in your message" rows="5"></textarea></div>
+    </div>
   </div>
-  <div id="output" class="panel-body"></div>
+  <div class="col-sm-3 well">
+    <p><button type="button" onclick="clearScreen()" class="btn btn-success">Clear Output</button></p>
+    <div class="panel panel-info">
+      <div class="panel-heading">
+	<h3 class="panel-title">Room's Response</h3>
+      </div>
+      <div id="output"></div>
+    </div>
+  </div>
 </div>
 }
+
