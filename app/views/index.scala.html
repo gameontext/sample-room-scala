@@ -9,19 +9,18 @@
   <h4>Preformed Messages, try them, edit them, or just write your own</h2>
 </div>
 <p>
-  <button type="button" onclick="roomHello()" class="btn btn-primary">Hello</button>
-  <button type="button" onclick="argh()" class="btn btn-primary">Do Undefined</button>
-  <button type="button" onclick="roomGoodbye()" class="btn btn-primary">Goodbye</button>
-  <button type="button" onclick="chat()" class="btn btn-primary">Chat</button>
-  <button type="button" onclick="play()" class="btn btn-primary">Play</button>
-  <button type="button" onclick="gowest()" class="btn btn-primary">Go west</button>
-</p>
-<p>
-
+  <div class="row">
+  <div class="col-sm-2 well"><button type="button" onclick="roomHello()" class="btn btn-primary btn-block">Hello</button></div>
+  <div class="col-sm-2 well"><button type="button" onclick="argh()" class="btn btn-primary btn-block">Do Undefined</button></div>
+  <div class="col-sm-2 well"><button type="button" onclick="roomGoodbye()" class="btn btn-primary btn-block">Goodbye</button></div>
+  <div class="col-sm-2 well"><button type="button" onclick="chat()" class="btn btn-primary btn-block">Chat</button></div>
+  <div class="col-sm-2 well"> <button type="button" onclick="play()" class="btn btn-primary btn-block">Play</button></div>
+  <div class="col-sm-2 well"><button type="button" onclick="gowest()" class="btn btn-primary btn-block">Go west</button></div>
+  </div>
 </p>
 
 <div class="row">
-  <div class="col-sm-3 well">
+  <div class="col-sm-6 well">
     <p><button type="button" onclick="send()" class="btn btn-info">Send to Room!</button></p>
     <div class="panel panel-info">
       <div class="panel-heading">
@@ -30,7 +29,7 @@
       <div> <textarea id="input" class="form-control" id="text" name="text" placeholder="Type in your message" rows="5"></textarea></div>
     </div>
   </div>
-  <div class="col-sm-3 well">
+  <div class="col-sm-6 well">
     <p><button type="button" onclick="clearScreen()" class="btn btn-success">Clear Output</button></p>
     <div class="panel panel-info">
       <div class="panel-heading">
