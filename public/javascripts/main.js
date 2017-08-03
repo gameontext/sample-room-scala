@@ -7,6 +7,10 @@ function init() {
     testWebSocket();
 }
 
+function connect() {
+    testWebSocket();
+}
+
 function roomHello() {
     var roomHello = {
         "username": "Sally",
