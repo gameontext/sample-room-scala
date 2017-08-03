@@ -124,7 +124,7 @@ class RoomActor(out: ActorRef) extends Actor {
       case p ("roomGoodbye", _, _)   => out ! ("Don't slam door on way out, please.")
       case p ("roomPart", _, _)      => out ! ("Don't slam door on way out, please.")
       case p ("room", _, x) if !?(x) => out ! (command(x))
-      case p ("room", _, x)          => out ! ("player,*," + chat( contentOf(x),  usernameOf(x)))
+      case p ("room", _, x)          => out ! ("player,*," + chat(contentOf(x),  usernameOf(x)))
       case _                         => out ! ("whatever, I dont care...") 
     }
     case _            => out ! ("So long, and thanks for the fish.")
