@@ -28,28 +28,28 @@ class HomeController @Inject()(cc: ControllerComponents)
 object RoomActor {
   def props(out: ActorRef) = Props(new RoomActor(out))
   val sampleRoom : JsValue = Json.obj(
-    "type" -> "location",
-    "name" -> "bob",
-    "fullName" -> "sample scala room",
-    "description" -> """So.. once there was a sample scala room.
-                       |and this room was well described.
-                       |in detail. So much detail. Bigly.""".stripMargin,
-    "exits" -> Json.obj(
-      "N" -> "North",
-      "S" -> "South",
-      "W" -> "West",
-      "E" -> "East"
+    "type"          -> "location",
+    "name"          -> "bob",
+    "fullName"      -> "sample scala room",
+    "description"   -> """So.. once there was a sample scala room.
+                         |and this room was well described.
+                         |in detail. So much detail. Bigly.""".stripMargin,
+    "exits"         -> Json.obj(
+      "N"           -> "North",
+      "S"           -> "South",
+      "W"           -> "West",
+      "E"           -> "East"
     ),
-    "commands" -> Json.obj(
-      "/play" -> "play with play"
+    "commands"      -> Json.obj(
+      "/play"       -> "play with play"
     ),
     "roomInventory" -> List("yoyo","top")
   )
 
   def chat(message : String, username : String) : JsValue = Json.obj (
-    "type" -> "chat",
+    "type"     -> "chat",
     "username" -> username,
-    "content" -> message,
+    "content"  -> message,
     "bookmark" -> "!*?#"
   )
 
@@ -86,28 +86,28 @@ object RoomActor {
   }
 
   def play(username : String, userid : String) : JsValue = Json.obj (
-    "type" -> "event",
-    "content" -> Json.obj (
-      "*" -> (username + " plays"),
-      userid -> "you play"
+    "type"     -> "event",
+    "content"  -> Json.obj (
+      "*"      -> (username + " plays"),
+      userid   -> "you play"
     ),
     "bookmark" -> "!*?#"
   )
 
    def unimplemented(username : String, userid : String) : JsValue = Json.obj (
-    "type" -> "event",
-    "content" -> Json.obj (
-      "*" -> (username + " attempts an unimplemented command"),
-      userid -> "you attempt an unimplemented command"
+    "type"     -> "event",
+    "content"  -> Json.obj (
+      "*"      -> (username + " attempts an unimplemented command"),
+      userid   -> "you attempt an unimplemented command"
     ),
     "bookmark" -> "!*?#"
   )
 
   def move(direction : String) : JsValue = direction.substring(0, 1).toUpperCase match {
     case "N" | "S" | "W" | "E" => Json.obj (
-      "type" -> "exit",
+      "type"    -> "exit",
       "content" -> "You exit through the door",
-      "exitId" -> direction.substring(0, 1).toUpperCase
+      "exitId"  -> direction.substring(0, 1).toUpperCase
     )
     case _ => ???
   }
