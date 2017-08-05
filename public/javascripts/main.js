@@ -1,9 +1,11 @@
-var wsUri = "ws://localhost:9000/room";
+var wsUri = "ws://" + window.document.location.host + "/room";
 var output;
 
 function init() {
     output = document.getElementById("output");
     input = document.getElementById("input");
+    wsdest = document.getElementById("wsdest");
+    wsdest.value=wsUri;
     testWebSocket();
 }
 
@@ -67,7 +69,7 @@ function gowest() {
 
 
 function testWebSocket() {
-    websocket = new WebSocket(wsUri);
+    websocket = new WebSocket(wsdest.value);
     websocket.onopen    = function(evt) { onOpen(evt) };
     websocket.onclose   = function(evt) { onClose(evt) };
     websocket.onmessage = function(evt) { onMessage(evt) };
@@ -94,7 +96,7 @@ function writeToScreen(message) {
 }
 
 function onOpen(evt) {
-    writeToScreen("CONNECTED");
+    writeToScreen(wsdest.value + "...CONNECTED");
 }
 
 function onClose(evt) {
@@ -103,7 +105,6 @@ function onClose(evt) {
 
 function onMessage(evt) {
     writeToScreen('<span style="color: blue;">RESPONSE: ' + evt.data+'</span>');
-    //websocket.close();
 }
 
 function onError(evt) {
