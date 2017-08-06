@@ -13,7 +13,7 @@ This is a sample of a "Game On" room microservice implemented using...
 
 ## Docker Hub
 
-[image](https://hub.docker.com/r/ilanpillemer/sample-room-scala/) for the room.
+[Image](https://hub.docker.com/r/ilanpillemer/sample-room-scala/) for the room.
 
 ## Chronicles
 
