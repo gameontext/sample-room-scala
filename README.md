@@ -7,6 +7,14 @@ This is a sample of a "Game On" room microservice implemented using...
 - [play](https://www.playframework.com/) as the Websocket Framework.
 - [ensime](http://ensime.org) as the plugin for emacs.
 
+## Room is up and running
+
+[Test](http://134.168.52.95:9000) it yourself
+
+## Docker Hub
+
+- [image](https://hub.docker.com/r/ilanpillemer/sample-room-scala/) for the room.
+
 ## Chronicles
 
 Read the blog post
