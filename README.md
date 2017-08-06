@@ -17,7 +17,7 @@ This is a sample of a "Game On" room microservice implemented using...
 
 ## Chronicles
 
-Read the blog post
+Read the [blog post](http://blog.gameontext.org/2017/08/06/sample-scala-room.html)
 
 ## Contributing
 
